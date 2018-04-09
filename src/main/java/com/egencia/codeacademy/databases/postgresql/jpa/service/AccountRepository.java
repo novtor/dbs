@@ -8,4 +8,6 @@ import javax.persistence.LockModeType;
 
 public interface AccountRepository extends CrudRepository<Account, Long> {
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Account findOne(Long id);
 }
