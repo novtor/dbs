@@ -3,6 +3,8 @@ package com.egencia.codeacademy.databases.postgresql.jpa.service;
 import com.egencia.codeacademy.databases.postgresql.jpa.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -20,6 +22,7 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
+    @Transactional
     public void transfer(long fromAccountId, long toAccountId, BigDecimal amount) {
         if(fromAccountId == toAccountId) {
             System.out.println("no transfer from the same account");

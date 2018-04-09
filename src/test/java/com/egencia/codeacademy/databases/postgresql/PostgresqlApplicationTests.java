@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
+import java.util.stream.IntStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,5 +62,11 @@ public class PostgresqlApplicationTests {
             logger.info("Transferring from {} to {}", fromAccountId, toAccountId);
             accountService.transfer(fromAccountId, toAccountId, BigDecimal.ONE);
         }
+    }
+
+    @Test
+    public void simulateConcurrentRealTransfer() {
+        IntStream.range(0, 10).parallel()
+                .forEach(i-> this.simulateRealTransfer());
     }
 }
