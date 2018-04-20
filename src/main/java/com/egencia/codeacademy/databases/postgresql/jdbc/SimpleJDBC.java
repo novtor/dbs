@@ -29,8 +29,8 @@ public class SimpleJDBC {
     public void connectToDB() throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         connection = DriverManager.getConnection(
-                "jdbc:postgresql://ddomanine-code-academy.cbbfapy28unu.us-west-2.rds.amazonaws.com:5432/jdbctest",
-                "masteruser",
+                "jdbc:postgresql://localhost:5432/dbtest",
+                "codeacademy",
                 "123456A_");
     }
 
