@@ -1,12 +1,12 @@
-package com.egencia.codeacademy.databases.postgresql;
+package com.egencia.codeacademy.databases.mongodb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PostgresqlApplication {
+public class MongoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PostgresqlApplication.class, args);
+		SpringApplication.run(MongoApplication.class, args);
 	}
 }

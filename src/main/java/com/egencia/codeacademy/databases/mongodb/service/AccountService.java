@@ -1,9 +1,8 @@
-package com.egencia.codeacademy.databases.postgresql.jpa.service;
+package com.egencia.codeacademy.databases.mongodb.service;
 
-import com.egencia.codeacademy.databases.postgresql.jpa.model.Account;
+import com.egencia.codeacademy.databases.mongodb.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -23,24 +22,19 @@ public class AccountService {
     }
 
     @Transactional
-    public void transfer(long fromAccountId, long toAccountId, BigDecimal amount) {
-        if(fromAccountId == toAccountId) {
+    public void transfer(String fromAccountId, String toAccountId, BigDecimal amount) {
+        if(fromAccountId.equals(toAccountId)) {
             System.out.println("no transfer from the same account");
             return;
         }
         Account fromAccount = accountRepository.findOne(fromAccountId);
         Account toAccount = accountRepository.findOne(toAccountId);
-        BigDecimal sumBefore = fromAccount.getAmount().add(toAccount.getAmount());
 
         fromAccount.setAmount(fromAccount.getAmount().add(amount.negate()));
         toAccount.setAmount(toAccount.getAmount().add(amount));
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        BigDecimal sumAfter = fromAccount.getAmount().add(toAccount.getAmount());
-
-        if(!sumAfter.equals(sumBefore)) {
-            System.out.println("not equals");
-        }
     }
+
 }
