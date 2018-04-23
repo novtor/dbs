@@ -33,13 +33,14 @@ public class MongoApplicationTests {
 
     @Before
     public void init() {
-        mongoTemplate.setReadPreference(ReadPreference.secondary());
+        mongoTemplate.setReadPreference(ReadPreference.primary());
     }
 
     private final int MY_ACCOUNT_FROM = 0;
     private final int MY_ACCOUNT_TO = 1;
     @Test
     public void createAccounts() {
+        accountService.deleteAll();
         for (int i = 0; i < 10; i++) {
             Account account = new Account();
             account.setAmount(BigDecimal.TEN);
@@ -77,6 +78,24 @@ public class MongoApplicationTests {
                 i -> {
                     BigDecimal withdrawCoef = i % 2 == 0 ? BigDecimal.ONE : BigDecimal.ONE.negate();
                     accountService.transfer(fromAccount, toAccount, BigDecimal.ONE.multiply(withdrawCoef));
+                    if(i%100 == 0) {
+                        System.out.println("Transferred " + i + " times");
+                    }
+                });
+    }
+
+
+    @Test
+    public void transferOneManyTimesFromRandomAccounts() {
+        List<Account> allAccounts = new ArrayList<>();
+        accountService.findAllAccounts().forEach(allAccounts::add);
+        IntStream.range(0, 1000).forEach(
+                i -> {
+                    int from = (int) Math.ceil(Math.random() * allAccounts.size()) - 1;
+                    int to = (int) Math.ceil(Math.random() * allAccounts.size()) - 1;
+                    String fromAccount = allAccounts.get(from).getId();
+                    String toAccount = allAccounts.get(to).getId();
+                    accountService.transfer(fromAccount, toAccount, BigDecimal.ONE);
                     if(i%100 == 0) {
                         System.out.println("Transferred " + i + " times");
                     }

@@ -1,6 +1,7 @@
 package com.egencia.codeacademy.databases.mongodb.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 
 import java.math.BigDecimal;
 
@@ -10,6 +11,9 @@ public class Account {
     private String id;
 
     private BigDecimal amount;
+
+    @Version
+    private int version;
 
     public BigDecimal getAmount() {
         return amount;
@@ -28,6 +32,7 @@ public class Account {
         return "Account{" +
                 "id=" + id +
                 ", amount=" + amount +
+                ", version=" + version +
                 '}';
     }
 }

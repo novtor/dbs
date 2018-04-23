@@ -24,7 +24,7 @@ public class AccountService {
     @Transactional
     public void transfer(String fromAccountId, String toAccountId, BigDecimal amount) {
         if(fromAccountId.equals(toAccountId)) {
-            System.out.println("no transfer from the same account");
+//            System.out.println("no transfer from the same account");
             return;
         }
         Account fromAccount = accountRepository.findOne(fromAccountId);
@@ -37,4 +37,7 @@ public class AccountService {
 
     }
 
+    public void deleteAll() {
+        accountRepository.deleteAll();
+    }
 }
