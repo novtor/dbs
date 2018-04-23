@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +33,14 @@ public class MongoApplicationTests {
 
     @Before
     public void init() {
-        mongoTemplate.setReadPreference(ReadPreference.primary());
+        mongoTemplate.setReadPreference(ReadPreference.secondary());
     }
 
+    private final int MY_ACCOUNT_FROM = 0;
+    private final int MY_ACCOUNT_TO = 1;
     @Test
     public void createAccounts() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
             Account account = new Account();
             account.setAmount(BigDecimal.TEN);
             Account result = accountService.save(account);
@@ -49,8 +53,17 @@ public class MongoApplicationTests {
     public void transferOne() {
         List<Account> allAccounts = new ArrayList<>();
         accountService.findAllAccounts().forEach(allAccounts::add);
-        String fromAccount = allAccounts.get(1).getId();
-        String toAccount = allAccounts.get(0).getId();
+        String fromAccount = allAccounts.get(MY_ACCOUNT_FROM).getId();
+        String toAccount = allAccounts.get(MY_ACCOUNT_TO).getId();
+        accountService.transfer(fromAccount, toAccount, BigDecimal.ONE);
+    }
+
+    @Test
+    public void transferOneBackward() {
+        List<Account> allAccounts = new ArrayList<>();
+        accountService.findAllAccounts().forEach(allAccounts::add);
+        String fromAccount = allAccounts.get(MY_ACCOUNT_TO).getId();
+        String toAccount = allAccounts.get(MY_ACCOUNT_FROM).getId();
         accountService.transfer(fromAccount, toAccount, BigDecimal.ONE);
     }
 
@@ -58,8 +71,8 @@ public class MongoApplicationTests {
     public void transferOneManyTimes() {
         List<Account> allAccounts = new ArrayList<>();
         accountService.findAllAccounts().forEach(allAccounts::add);
-        String fromAccount = allAccounts.get(0).getId();
-        String toAccount = allAccounts.get(1).getId();
+        String fromAccount = allAccounts.get(MY_ACCOUNT_FROM).getId();
+        String toAccount = allAccounts.get(MY_ACCOUNT_TO).getId();
         IntStream.range(0, 300).forEach(
                 i -> {
                     BigDecimal withdrawCoef = i % 2 == 0 ? BigDecimal.ONE : BigDecimal.ONE.negate();
