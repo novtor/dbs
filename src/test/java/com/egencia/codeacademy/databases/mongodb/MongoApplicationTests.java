@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,8 @@ public class MongoApplicationTests {
 
     @Before
     public void init() {
-        mongoTemplate.setReadPreference(ReadPreference.primary());
+        mongoTemplate.setReadPreference(ReadPreference.secondary());
+//        mongoTemplate.setWriteConcern(WriteConcern.W3);
     }
 
     private final int MY_ACCOUNT_FROM = 0;
@@ -41,7 +40,7 @@ public class MongoApplicationTests {
     @Test
     public void createAccounts() {
         accountService.deleteAll();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             Account account = new Account();
             account.setAmount(BigDecimal.TEN);
             Account result = accountService.save(account);
